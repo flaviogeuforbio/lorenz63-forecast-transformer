@@ -1,4 +1,4 @@
-# Transformer Multi-Step Forecasting on Lorenz-63
+# Multi-Step Forecasting on Lorenz-63 with Transformer model
 
 Multi-step forecasting of nonlinear dynamical systems across chaotic and non-chaotic regimes.
 
@@ -132,7 +132,7 @@ The model predicts the entire 32-step horizon in a single forward pass during tr
 
 ### Loss and Optimization
 
-The model is trained using Mean Squared Error (MSE) computed over the full forecast horizon:
+The model is trained using Mean Squared Error (*MSE*) computed over the full forecast horizon:
 
 $$\mathcal{L} = \frac{1}{H} \sum_{t=1}^{H} \| \hat{x}_{t} - x_{t} \|^2$$
 
@@ -170,8 +170,8 @@ All experiments, training procedures, and visualizations are fully reproducible 
 Clone the repository and install dependencies:
 
 ```bash
-git clone <https://github.com/flaviogeuforbio/lorenz63-forecast-transformer>
-cd <lorenz63-forecast-transformer>
+git clone https://github.com/flaviogeuforbio/lorenz63-forecast-transformer
+cd lorenz63-forecast-transformer
 pip install -r requirements.txt
 ```
 
@@ -207,4 +207,25 @@ To reproduce dataset diagnostics (dead windows analysis, regime separability)
 ```
 python src/make_mseplots.py
 ```
+
+---
+
+## Limitations & Future Directions
+
+This project focuses on deterministic multi-step forecasting of Lorenz-63 trajectories under controlled simulation settings. While the results are structurally consistent with dynamical system theory, several limitations remain.
+
+First, **no explicit estimate of the Lyapunov time** or predictability horizon is computed. The error growth observed in the chaotic regime is qualitatively consistent with exponential divergence, but it is not quantitatively linked to the system’s Lyapunov exponents.
+
+Second, **forecasting is purely deterministic**. The model produces point estimates without uncertainty quantification, which is particularly relevant in chaotic systems where long-term prediction becomes fundamentally probabilistic.
+
+Third, **experiments are conducted on a single canonical system** (Lorenz-63). Although useful as a benchmark for nonlinear dynamics, broader validation across different dynamical systems would strengthen generality claims.
+
+Potential extensions include:
+
+- Estimating Lyapunov exponents and relating them to forecast error growth
+- Incorporating probabilistic forecasting (e.g., predictive distributions)
+- Comparing with alternative sequence models (e.g., Neural ODEs, state-space models)
+- Introducing physics-informed constraints into the loss function
+
+These directions would allow a deeper investigation of how sequence models interact with intrinsic dynamical instability, moving from empirical forecasting toward a more theory-aware modeling framework.
 
