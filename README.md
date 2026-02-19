@@ -10,15 +10,15 @@ This project investigates how a Transformer behaves under these fundamentally di
 
 ---
 
-# (A) What this project does
+# What this project does
 
 This repository explores **H-step forecasting** on the Lorenz-63 system:
 
-- Input: a window of past states  
-- Output: a multi-step forecast of future states  
+- Input: a window of past states ($T = 128$)  
+- Output: a multi-step forecast of future states ($H = 32$)  
 - Comparison across:
-  - Sub-critical (stable) regime  
-  - Super-critical (chaotic) regime  
+  - Sub-critical (stable) regime ($\rho < \rho_c$) 
+  - Super-critical (chaotic) regime ($\rho > \rho_c$)  
 
 The central question:
 
@@ -26,7 +26,7 @@ The central question:
 
 ---
 
-# (B) Key Results
+# Key Results
 
 ![mse vs horizon](plots/mse_per_step_by_regime.png)
 
@@ -44,7 +44,7 @@ This confirms:
 
 ---
 
-# (C) Why Forecasting? (And Why Not Just Classification)
+# Why Forecasting? (And Why Not Just Classification)
 
 Initially, the project included:
 
@@ -69,7 +69,7 @@ It requires modeling temporal evolution, not just detecting statistical signatur
 
 ---
 
-# (D) Dataset & Sampling Strategy
+# Dataset & Sampling Strategy
 
 A rigorous dataset pipeline was implemented to avoid trivial artifacts.
 
