@@ -21,7 +21,7 @@ This project investigates how a Transformer behaves under these fundamentally di
 
 # What this project does
 
-This repository explores **H-step forecasting** on the Lorenz-63 system:
+This repository explores **multi-step forecasting** on the Lorenz-63 system:
 
 - Input: a window of past states   
 - Output: a multi-step forecast of future states  
@@ -71,7 +71,7 @@ Forecasting, on the other hand, is fundamentally different. It requires modeling
 
 # Dataset & Sampling Strategy
 
-The dataset is generated from simulated Lorenz-63 trajectories by varying the control parameter \( \rho \) across sub-critical and super-critical regimes. Long trajectories are segmented into fixed-length sliding windows and split into train, validation, and test sets.
+The dataset is generated from simulated Lorenz-63 trajectories by varying the control parameter *ρ* across sub-critical and super-critical regimes. Long trajectories are segmented into fixed-length sliding windows and split into train, validation, and test sets.
 
 Each window is defined as:
 
@@ -107,5 +107,59 @@ After applying the selected burn-in and sampling bounds, the fraction of dead wi
 
 These values indicate that approximately half of the windows still lie in low-variance attractor regions, but the sampling procedure prevents the dataset from being dominated by trivial steady states.
 
+---
 
+# Model
+
+The forecasting task is modeled using a Transformer encoder architecture designed to learn the local flow of the Lorenz-63 system from fixed-length trajectory windows. 
+
+Each input window consists of 128 consecutive 3D states $(x, y, z)$. These are first projected into a higher-dimensional embedding space, where temporal structure can be modeled via self-attention. Positional encoding is added to preserve ordering information, ensuring that the model distinguishes early from late states within the input window.
+
+The Transformer encoder stack then processes the embedded sequence, allowing the model to learn temporal dependencies across the entire history window. The final hidden representation is mapped to a 32-step future trajectory through a linear forecasting head.
+
+### Architecture Details
+
+- Input dimension: 3 (state space coordinates)
+- Input length: `T_in = 128`
+- Forecast horizon: `H = 32`
+- Model dimension: `d_model = 128`
+- Number of encoder layers: `n_layers = 4`
+- Number of attention heads: `n_heads = 4`
+- Feedforward dimension: `d_ff = 512`
+- Dropout: `dropout = 0.1`
+
+The model predicts the entire 32-step horizon in a single forward pass during training. For visualization beyond the fixed horizon, an autoregressive rollout is used, where predictions are recursively fed back as input.
+
+### Loss and Optimization
+
+The model is trained using Mean Squared Error (MSE) computed over the full forecast horizon:
+
+\begin{equation}
+\mathcal{L} = \frac{1}{H} \sum_{t=1}^{H} \| \hat{x}_{t} - x_{t} \|^2
+\end{equation}
+
+Training includes:
+
+- Early stopping based on validation loss
+- Best checkpoint selection
+- Standardization using training-set statistics only
+
+The log-scale training and validation curves show stable convergence without divergence or overfitting:
+
+<p align="center">
+  <img src="plots/training_curves.png" width="650">
+</p>
+
+### Interpretation
+
+The Transformer is not used here as a black-box predictor. Its role is to approximate the local dynamical flow map:
+
+\begin{equation}
+\Phi_{H}: x_{t-T_{in}:t} \mapsto x_{t+1:t+H}
+\end{equation}
+
+In the non-chaotic regime, this mapping is stable and well-behaved.  
+In the chaotic regime, the mapping is locally accurate but globally unstable due to intrinsic sensitivity to initial conditions.
+
+The model therefore captures short-term dynamics effectively, while **long-horizon degradation reflects structural properties of the system** rather than architectural failure.
 
