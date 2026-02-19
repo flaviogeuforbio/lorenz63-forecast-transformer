@@ -11,6 +11,7 @@ This allows evaluation beyond the fixed training horizon while preserving maximu
 The divergence observed at later times is therefore a consequence of intrinsic chaotic sensitivity, not a single-shot long-horizon prediction artifact.
 </sub>
 
+---
 
 Predicting the future of a nonlinear system is fundamentally different depending on whether the system is stable or chaotic.  
 In chaotic regimes, trajectories **diverge exponentially from infinitesimal perturbations**.  
