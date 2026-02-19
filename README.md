@@ -4,6 +4,14 @@ Multi-step forecasting of nonlinear dynamical systems across chaotic and non-cha
 
 ![forecast gif](plots/true_vs_forecast_chaotic.gif)
 
+<sub>
+The forecast shown above is generated using an autoregressive rollout.  
+Starting from a fixed input window, the model predicts the next step, which is then fed back as input to iteratively generate a longer trajectory.  
+This allows evaluation beyond the fixed training horizon while preserving maximum short-term accuracy at each step.  
+The divergence observed at later times is therefore a consequence of intrinsic chaotic sensitivity, not a single-shot long-horizon prediction artifact.
+</sub>
+
+
 Predicting the future of a nonlinear system is fundamentally different depending on whether the system is stable or chaotic.  
 In chaotic regimes, trajectories **diverge exponentially from infinitesimal perturbations**.  
 This project investigates how a Transformer behaves under these fundamentally different dynamical conditions.
