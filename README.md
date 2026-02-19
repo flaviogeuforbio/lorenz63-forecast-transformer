@@ -14,8 +14,8 @@ This project investigates how a Transformer behaves under these fundamentally di
 
 This repository explores **H-step forecasting** on the Lorenz-63 system:
 
-- Input: a window of past states ($T = 128$)  
-- Output: a multi-step forecast of future states ($H = 32$)  
+- Input: a window of past states   
+- Output: a multi-step forecast of future states  
 - Comparison across:
   - Sub-critical (stable) regime ($\rho < \rho_c$) 
   - Super-critical (chaotic) regime ($\rho > \rho_c$)  
@@ -26,21 +26,19 @@ The central question:
 
 ---
 
-# Key Results
+# (B) Key Results
 
 ![mse vs horizon](plots/mse_per_step_by_regime.png)
 
-### Observations
+The central metric used to evaluate forecasting performance is the mean squared error (*MSE*) as a function of the forecast horizon. Instead of reporting a single aggregated number, the error is analyzed step-by-step, which makes it possible to observe how predictive accuracy degrades over time and how this degradation depends on the dynamical regime.
 
-- In the **non-chaotic regime**, forecast error remains nearly flat across horizon.
-- In the **chaotic regime**, error grows with forecast step (as expected).
-- The Transformer significantly outperforms a **persistence baseline**.
-- Divergence in the chaotic regime remains dynamically coherent (attractor switching rather than random drift).
+In the **sub-critical** (non-chaotic) **regime**, the error remains almost constant across the forecast horizon. This behavior reflects the intrinsic stability of the system: **trajectories tend to converge toward stable attractors**, and small prediction errors do not amplify significantly over time. In this regime, the Transformer maintains accurate multi-step forecasts well beyond the immediate horizon.
 
-This confirms:
+In the **super-critical** (chaotic) **regime**, the behavior is qualitatively different. The prediction error increases with forecast step, as expected for a system exhibiting sensitive dependence on initial conditions. However, the growth is structured rather than random: the Transformer consistently outperforms the persistence baseline, and **the predicted trajectories remain confined to the attractor manifold** even when diverging from the exact ground truth trajectory.
 
-- The model captures short-term dynamics meaningfully.
-- Long-horizon degradation reflects intrinsic system instability, not model collapse.
+The persistence baseline, which simply repeats the last observed state across the forecast horizon, provides a lower bound on trivial continuation. The Transformer surpasses this baseline in both regimes, demonstrating that it learns meaningful short-term dynamics rather than exploiting superficial statistical correlations.
+
+Overall, the results show that the model captures the local flow of the system effectively, while the long-horizon degradation observed in the chaotic regime reflects **intrinsic limits of predictability** rather than model instability.
 
 ---
 
@@ -56,7 +54,7 @@ However, dataset analysis revealed that:
 - The two regimes are **easily separable using simple statistics**.
 - Even a lightweight CNN1D solves the classification task reliably.
 
-![regime separability](plots/regime_histogram.png)
+![regime separability](data/plots/meanstd_by_regime.png)
 
 Window-level standard deviation alone largely separates regimes.  
 This makes classification/regression tasks structurally simple.
