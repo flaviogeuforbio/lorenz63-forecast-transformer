@@ -204,8 +204,19 @@ def make_gif(x: np.array, y_true: np.array, y_pred: np.array, traj: np.array, ou
     ax.scatter(context[:,0], context[:,1], context[:,2], s=1, alpha=0.1, label="Context trajectory")
     ax.plot(x[:,0], x[:,1], x[:,2], linewidth=1.5, alpha=0.9, label="History (Input)")
 
-    true_line, = ax.plot([], [], [], linewidth=2.0, label="True future")
-    pred_line, = ax.plot([], [], [], linewidth=2.0, label="Forecast (Transformer)")
+    true_line, = ax.plot([], [], [],
+                     linewidth=2.0,
+                     label="True future",
+                     antialiased=True,
+                     solid_capstyle="round",
+                     solid_joinstyle="round")
+
+    pred_line, = ax.plot([], [], [],
+                     linewidth=2.0,
+                     label="Forecast (Transformer)",
+                     antialiased=True,
+                     solid_capstyle="round",
+                     solid_joinstyle="round")
 
     info_txt = ax.text2D(0.02, 0.98, "", transform=ax.transAxes, ha="left", va="top", fontsize=10, bbox=dict(boxstyle="round", facecolor="white", alpha=0.65, edgecolor="none"))
 
