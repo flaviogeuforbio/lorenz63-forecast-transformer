@@ -159,3 +159,52 @@ In the chaotic regime, the mapping is locally accurate but globally unstable due
 
 The model therefore captures short-term dynamics effectively, while **long-horizon degradation reflects structural properties of the system** rather than architectural failure.
 
+---
+
+## Reproducibility
+
+All experiments, training procedures, and visualizations are fully reproducible from the repository.
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone <https://github.com/flaviogeuforbio/lorenz63-forecast-transformer>
+cd <lorenz63-forecast-transformer>
+pip install -r requirements.txt
+```
+
+### Training
+
+To train the Transformer model:
+
+```
+python src/train.py --help
+```
+
+### Forecast Evaluation & Plots
+
+To generate forecasting performance plots (MSE vs horizon):
+```
+python src/make_mseplots.py --help
+```
+
+To generate training curves:
+```
+python src/make_losscurves.py --help
+```
+
+To generate the 3D forecast animation:
+```
+python src/make_animations.py
+```
+
+
+### Dataset Analysis
+To reproduce dataset diagnostics (dead windows analysis, regime separability)
+
+```
+python src/make_mseplots.py
+```
+
