@@ -71,18 +71,34 @@ Forecasting, on the other hand, is fundamentally different. It requires modeling
 
 # Dataset & Sampling Strategy
 
-The dataset is generated from simulated Lorenz-63 trajectories (using *RK4* algorithm) by varying the control parameter 𝜌 across sub-critical and super-critical regimes. Long trajectories are segmented into fixed-length sliding windows, which are then split into train, validation, and test sets.
+The dataset is generated from simulated Lorenz-63 trajectories by varying the control parameter \( \rho \) across sub-critical and super-critical regimes. Long trajectories are segmented into fixed-length sliding windows and split into train, validation, and test sets.
 
-A crucial aspect is the presence of *dead windows*: segments where the trajectory has already collapsed onto an attractor and exhibits very low local variability. These windows are statistically redundant and can artificially simplify forecasting, especially in sub-critical regimes where convergence to a fixed point is rapid.
+A central issue in dynamical systems datasets is the presence of *dead windows*: segments where the trajectory has already collapsed onto the attractor and exhibits very low local variability. Such windows are statistically redundant and can artificially simplify forecasting, especially in sub-critical regimes where convergence to equilibrium is rapid.
 
-To quantify this effect, I computed the fraction of low-variance windows across dataset splits and analyzed the distribution of window-wise standard deviation. This revealed that a significant portion of raw samples lie in dynamically trivial regions, motivating the introduction of a burn-in phase and carefully chosen sampling bounds.
+To address this, I performed a systematic analysis of window-wise standard deviation as a function of the starting index along each trajectory. This analysis revealed that the early portion of trajectories contains meaningful transient dynamics, while later segments increasingly collapse toward steady attractor behavior.
 
-The burn-in and stopping indices are selected empirically by inspecting how window variance evolves along trajectories for different values of 
-𝜌. This ensures that sampled windows capture meaningful transient dynamics rather than steady-state collapse, and that both regimes are represented in a dynamically informative way.
+<p align="center">
+  <img src="data/plots/optimal_windows_start.png" width="650">
+</p>
 
-<p align="center"> <img src="data/plots/optimal_windows_start.png" width="650"> </p>
+Based on this empirical inspection, the following sampling bounds were selected:
 
-The histogram above shows how clearly window-level statistics separate sub-critical and super-critical regimes, highlighting that regime classification itself is relatively simple compared to multi-step forecasting.
+- `burn_in ≈ 400`
+- `stop_idx ≈ 2000`
+
+These values ensure that windows are extracted from dynamically informative regions while avoiding trivial steady-state segments.
+
+Even simple statistics such as window variance largely separate the two regimes, which explains why classification tasks are comparatively simple.
+
+After applying the selected burn-in and sampling bounds, the fraction of dead windows in each dataset split is:
+
+| Split       | Dead Windows Fraction |
+|------------|-----------------------|
+| Train      | 0.513                 |
+| Validation | 0.534                 |
+| Test       | 0.511                 |
+
+These values indicate that approximately half of the windows still lie in low-variance attractor regions, but the sampling procedure prevents the dataset from being dominated by trivial steady states. Forecasting performance therefore reflects genuine dynamical modeling rather than exploitation of collapsed trajectories.
 
 
 
