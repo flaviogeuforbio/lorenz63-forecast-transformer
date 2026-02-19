@@ -152,7 +152,7 @@ The log-scale training and validation curves show stable convergence without div
 
 The Transformer is not used here as a black-box predictor. Its role is to approximate the local dynamical flow map:
 
-$$\Phi_{H}: x_{t-T_{in}:t} \mapsto x_{t+1:t+H}$$
+$$\Phi_{H}: x_{t-T:t} \mapsto x_{t+1:t+H}$$
 
 In the non-chaotic regime, this mapping is stable and well-behaved.  
 In the chaotic regime, the mapping is locally accurate but globally unstable due to intrinsic sensitivity to initial conditions.
