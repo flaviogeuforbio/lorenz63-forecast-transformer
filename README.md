@@ -50,11 +50,13 @@ A straightforward analysis of the dataset, however, revealed that **regime separ
 
 ![regime separability](data/plots/meanstd_by_regime.png)
 
-In practice, a lightweight CNN1D architecture already achieves high performance on these tasks, confirming that they are not dynamically demanding.
+In practice, a lightweight CNN1D architecture already achieves high performance on these tasks (regime classification and rho regression), confirming that they are not dynamically demanding.
 
-Forecasting, on the other hand, is fundamentally different. It requires modeling the temporal evolution of the system and capturing its local flow in state space. Unlike classification, which can rely on static distributional differences, multi-step prediction forces the model to learn how the state transforms over time.
+*(CNN1D metrics image)*
 
-For this reason, the focus of the project was shifted from regime detection to multi-step forecasting, which constitutes the physically meaningful and dynamically non-trivial problem.
+Forecasting, on the other hand, is fundamentally different. It requires modeling the temporal evolution of the system and capturing its local flow in state space. Unlike classification, which can rely on static distributional differences, **multi-step prediction forces the model to learn how the state transforms over time**.
+
+> For this reason, the focus of the project was shifted from regime/ρ detection to multi-step forecasting, which constitutes the physically meaningful and dynamically non-trivial problem.
 
 ---
 
