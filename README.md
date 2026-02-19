@@ -134,9 +134,9 @@ The model predicts the entire 32-step horizon in a single forward pass during tr
 
 The model is trained using Mean Squared Error (MSE) computed over the full forecast horizon:
 
-\begin{equation}
+$
 \mathcal{L} = \frac{1}{H} \sum_{t=1}^{H} \| \hat{x}_{t} - x_{t} \|^2
-\end{equation}
+$
 
 Training includes:
 
@@ -154,9 +154,9 @@ The log-scale training and validation curves show stable convergence without div
 
 The Transformer is not used here as a black-box predictor. Its role is to approximate the local dynamical flow map:
 
-\begin{equation}
+$
 \Phi_{H}: x_{t-T_{in}:t} \mapsto x_{t+1:t+H}
-\end{equation}
+$
 
 In the non-chaotic regime, this mapping is stable and well-behaved.  
 In the chaotic regime, the mapping is locally accurate but globally unstable due to intrinsic sensitivity to initial conditions.
