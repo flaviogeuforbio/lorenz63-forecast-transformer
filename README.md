@@ -197,7 +197,7 @@ python src/make_losscurves.py --help
 
 To generate the 3D forecast animation:
 ```
-python src/make_animations.py
+python src/make_animations.py --help
 ```
 
 
@@ -205,7 +205,7 @@ python src/make_animations.py
 To reproduce dataset diagnostics (dead windows analysis, regime separability)
 
 ```
-python src/make_mseplots.py
+python src/make_mseplots.py --help
 ```
 
 ---
