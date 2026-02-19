@@ -26,7 +26,7 @@ The central question:
 
 ---
 
-# (B) Key Results
+# Key Results
 
 ![mse vs horizon](plots/mse_per_step_by_regime.png)
 
@@ -44,26 +44,17 @@ Overall, the results show that the model captures the local flow of the system e
 
 # Why Forecasting? (And Why Not Just Classification)
 
-Initially, the project included:
+The project initially included two auxiliary tasks: regime classification (sub-critical vs super-critical) and regression of the control parameter ρ. These tasks were implemented to evaluate whether complex sequence models were necessary to extract meaningful information from the trajectories.
 
-- Regime classification (sub-critical vs super-critical)
-- ρ parameter regression
-
-However, dataset analysis revealed that:
-
-- The two regimes are **easily separable using simple statistics**.
-- Even a lightweight CNN1D solves the classification task reliably.
+A straightforward analysis of the dataset, however, revealed that **regime separation is structurally simple**. Even basic window-level statistics, such as the standard deviation of the trajectory within a window, are sufficient to almost perfectly separate the two regimes.
 
 ![regime separability](data/plots/meanstd_by_regime.png)
 
-Window-level standard deviation alone largely separates regimes.  
-This makes classification/regression tasks structurally simple.
+In practice, a lightweight CNN1D architecture already achieves high performance on these tasks, confirming that they are not dynamically demanding.
 
-Therefore:
+Forecasting, on the other hand, is fundamentally different. It requires modeling the temporal evolution of the system and capturing its local flow in state space. Unlike classification, which can rely on static distributional differences, multi-step prediction forces the model to learn how the state transforms over time.
 
-> Forecasting is the physically meaningful task.
-
-It requires modeling temporal evolution, not just detecting statistical signatures.
+For this reason, the focus of the project was shifted from regime detection to multi-step forecasting, which constitutes the physically meaningful and dynamically non-trivial problem.
 
 ---
 
