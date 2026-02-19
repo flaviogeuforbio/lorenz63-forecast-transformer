@@ -51,7 +51,7 @@ Overall, the results show that the model captures the local flow of the system e
 
 ---
 
-# Why Forecasting? (And Why Not Just Classification)
+# Why forecasting? (And why not just classification)
 
 The project initially included two auxiliary tasks: regime classification (sub-critical vs super-critical) and regression of the control parameter ρ. These tasks were implemented to evaluate whether complex sequence models were necessary to extract meaningful information from the trajectories.
 
@@ -71,26 +71,18 @@ Forecasting, on the other hand, is fundamentally different. It requires modeling
 
 # Dataset & Sampling Strategy
 
-A rigorous dataset pipeline was implemented to avoid trivial artifacts.
+The dataset is generated from simulated Lorenz-63 trajectories (using *RK4* algorithm) by varying the control parameter 𝜌 across sub-critical and super-critical regimes. Long trajectories are segmented into fixed-length sliding windows, which are then split into train, validation, and test sets.
 
-## Trajectory Generation
+A crucial aspect is the presence of *dead windows*: segments where the trajectory has already collapsed onto an attractor and exhibits very low local variability. These windows are statistically redundant and can artificially simplify forecasting, especially in sub-critical regimes where convergence to a fixed point is rapid.
 
-- Numerical integration of Lorenz-63
-- ρ sampled in sub- and super-critical intervals
-- Fixed σ and β
-- Controlled random seeds
-- Fixed timestep
+To quantify this effect, I computed the fraction of low-variance windows across dataset splits and analyzed the distribution of window-wise standard deviation. This revealed that a significant portion of raw samples lie in dynamically trivial regions, motivating the introduction of a burn-in phase and carefully chosen sampling bounds.
 
-## Window Construction
+The burn-in and stopping indices are selected empirically by inspecting how window variance evolves along trajectories for different values of 
+𝜌. This ensures that sampled windows capture meaningful transient dynamics rather than steady-state collapse, and that both regimes are represented in a dynamically informative way.
 
-- Input length: `T_in = 128`
-- Forecast horizon: `H = 32`
-- Sliding window sampling
-- Train/Val/Test split
+<p align="center"> <img src="data/plots/optimal_windows_start.png" width="650"> </p>
 
-## Burn-in and Transient Removal
+The histogram above shows how clearly window-level statistics separate sub-critical and super-critical regimes, highlighting that regime classification itself is relatively simple compared to multi-step forecasting.
 
-Transient collapse toward equilibrium creates "dead windows".
 
-Dead window fractions:
 
